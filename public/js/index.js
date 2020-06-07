@@ -1,7 +1,7 @@
 /*
  * @Author: 刘子民
  * @Date: 2020-06-07 21:19:05
- * @LastEditTime: 2020-06-07 22:22:21
+ * @LastEditTime: 2020-06-07 22:38:41
  */
 
 /* 
@@ -64,4 +64,19 @@ socket.on('addUser', data => {
     </p>
   </div>
   `);
+});
+
+// 监听用户列表的消息
+socket.on('userList', data => {
+  // 吧userList 中的数据 动态渲染到左侧菜单
+  $('.user-list ul').html('');
+  data.forEach(item => {
+    $('.user-list ul').append(`
+    <li class="user">
+      <div class="avatar"><img src="${item.avatar}" alt=""></div>
+      <div class="name">${item.username}</div>
+    </li>
+    `);
+  });
+  $('#userCount').text(data.length);
 });
