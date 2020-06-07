@@ -1,7 +1,7 @@
 /*
  * @Author: 刘子民
  * @Date: 2020-06-07 21:04:40
- * @LastEditTime: 2020-06-07 22:26:06
+ * @LastEditTime: 2020-06-08 00:01:07
  */
 
 const app = require('express')();
@@ -24,7 +24,6 @@ app.get('/', (req, res) => {
 });
 
 io.on('connection', socket => {
-  
   // console.log('新用户连接了')
   socket.on('login', data => {
     // 判断 如果data 在users 中存在 就说明用户已经登录，此时不能登录，
@@ -41,13 +40,39 @@ io.on('connection', socket => {
       // console.log('登录成功');
 
       // 告诉所有的用户，有用户加入到了聊天室，广播消息 无需封装 socketio 内置
-      
+
       // socker.emit :告诉当前用户
       // io.emit : 告诉所有的用户
-      io.emit('addUser',data)
+      io.emit('addUser', data);
 
       // 告诉所有的用户，目前聊天室的人数
-      io.emit('userList',users)
+      io.emit('userList', users);
     }
+
+    // 记录当前连接对象的属性
+    socket.username = data.username;
+    socket.avatar = data.avatar;
   });
+
+  // 用户断开连接功能
+  // 监听用户断开连接
+  socket.on('disconnect', () => {
+    let idx = users.findIndex(item => item.username === socket.username);
+    // 删除掉断开连接的这个人
+    users.splice(idx, 1);
+    // 1. 告诉所有人，有人离开群聊
+    io.emit('delUser', {
+      username: socket.username,
+      avatar: socket.avatar,
+    });
+    
+    // 2. 告诉所有人，userList 发生更新
+    io.emit('userList', users);
+  });
+
+  socket.on('sendMessage',data=>{
+    console.log(data)
+    io.emit('receiveMessage',data)
+  })
 });
+

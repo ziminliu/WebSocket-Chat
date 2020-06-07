@@ -1,7 +1,7 @@
 /*
  * @Author: 刘子民
  * @Date: 2020-06-07 21:19:05
- * @LastEditTime: 2020-06-07 22:38:41
+ * @LastEditTime: 2020-06-08 00:12:26
  */
 
 /* 
@@ -10,6 +10,8 @@
 
 var socket = io('http://localhost:3000');
 
+var username = '';
+var avatar = '';
 /* 
   2 登录功能
 */
@@ -52,6 +54,8 @@ socket.on('loginSuccess', data => {
   // 设置个人信息
   $('.avatar_url').attr('src', data.avatar);
   $('.user-list .username').text(data.username);
+  username = data.username;
+  avatar = data.avatar;
 });
 
 // 监听添加用户的消息
@@ -79,4 +83,71 @@ socket.on('userList', data => {
     `);
   });
   $('#userCount').text(data.length);
+});
+
+// 监听用户离开的系统消息
+socket.on('delUser', data => {
+  // 添加一条系统消息
+  $('.box-bd').append(`
+  <div class="system">
+    <p class="message_system">
+      <span class="content">${data.username}离开了群聊</span>
+    </p>
+  </div>
+  `);
+});
+
+// 聊天功能
+$('.btn-send').on('click', () => {
+  // 获取聊天的内容
+  var content = $('#content').text().trim();
+  // console.log($('#content').text());
+  $('#content').text('');
+  if (!content) return alert('请输入内容');
+
+  // 拿到内容发送给服务器
+  socket.emit('sendMessage', {
+    msg: content,
+    username: username,
+    avatar: avatar,
+  });
+});
+
+// 监听聊天的消息
+socket.on('receiveMessage', data => {
+  console.log(data);
+  // 显示接收的消息
+  console.log(username)
+  if (data.username === username) {
+    // console.log('my message');
+    // 自己的消息
+    $('.box-bd').append(`
+    <div class="message-box">
+      <div class="my message">
+        <img class="avatar" src="${data.avatar}" alt="" />
+        <div class="content">
+          <div class="bubble">
+            <div class="bubble_cont">${data.msg}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    `);
+  } else {
+    // 别人的消息
+    console.log('other message');
+    $('.box-bd').append(`
+    <div class="message-box">
+    <div class="other message">
+      <img class="avatar" src="${data.avatar}" alt="" />
+      <div class="content">
+        <div class="nickname">${data.username}</div>
+        <div class="bubble">
+          <div class="bubble_cont">${data.msg}</div>
+        </div>
+      </div>
+    </div>
+    </div>
+    `);
+  }
 });
