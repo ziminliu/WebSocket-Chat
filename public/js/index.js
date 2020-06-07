@@ -1,7 +1,7 @@
 /*
  * @Author: 刘子民
  * @Date: 2020-06-07 21:19:05
- * @LastEditTime: 2020-06-07 21:38:32
+ * @LastEditTime: 2020-06-07 22:22:21
  */
 
 /* 
@@ -34,4 +34,34 @@ $('#loginBtn').on('click', function () {
     username: username,
     avatar: avatar,
   });
+});
+
+//监听登录失败的请求
+socket.on('loginError', data => {
+  alert(data.message);
+});
+
+// 监听登录成功的请求
+socket.on('loginSuccess', data => {
+  // alert(data.username);
+  // 显示聊天窗口
+  // 隐藏登录窗口
+  $('.login_box').fadeOut();
+  $('.container').fadeIn();
+
+  // 设置个人信息
+  $('.avatar_url').attr('src', data.avatar);
+  $('.user-list .username').text(data.username);
+});
+
+// 监听添加用户的消息
+socket.on('addUser', data => {
+  // 添加一条系统消息
+  $('.box-bd').append(`
+  <div class="system">
+    <p class="message_system">
+      <span class="content">${data.username}加入了群聊</span>
+    </p>
+  </div>
+  `);
 });
