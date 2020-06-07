@@ -1,7 +1,7 @@
 /*
  * @Author: 刘子民
  * @Date: 2020-06-07 21:19:05
- * @LastEditTime: 2020-06-08 00:12:26
+ * @LastEditTime: 2020-06-08 00:20:14
  */
 
 /* 
@@ -68,6 +68,8 @@ socket.on('addUser', data => {
     </p>
   </div>
   `);
+  
+  scrollIntoView() 
 });
 
 // 监听用户列表的消息
@@ -95,6 +97,8 @@ socket.on('delUser', data => {
     </p>
   </div>
   `);
+  
+  scrollIntoView() 
 });
 
 // 聊天功能
@@ -117,7 +121,7 @@ $('.btn-send').on('click', () => {
 socket.on('receiveMessage', data => {
   console.log(data);
   // 显示接收的消息
-  console.log(username)
+  console.log(username);
   if (data.username === username) {
     // console.log('my message');
     // 自己的消息
@@ -150,4 +154,11 @@ socket.on('receiveMessage', data => {
     </div>
     `);
   }
+
+  scrollIntoView() 
 });
+
+// 当前元素的底部滚动到可视区
+function scrollIntoView() {
+  $('.box-bd').children(':last').get(0).scrollIntoView(false);
+}
