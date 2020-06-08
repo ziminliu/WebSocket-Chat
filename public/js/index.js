@@ -1,7 +1,7 @@
 /*
  * @Author: 刘子民
  * @Date: 2020-06-07 21:19:05
- * @LastEditTime: 2020-06-08 08:40:24
+ * @LastEditTime: 2020-06-08 09:14:27
  */
 
 /* 
@@ -104,9 +104,9 @@ socket.on('delUser', data => {
 // 聊天功能
 $('.btn-send').on('click', () => {
   // 获取聊天的内容
-  var content = $('#content').text().trim();
+  var content = $('#content').html();
   // console.log($('#content').text());
-  $('#content').text('');
+  $('#content').html('');
   if (!content) return alert('请输入内容');
 
   // 拿到内容发送给服务器
@@ -225,3 +225,23 @@ socket.on('receiveImage', data => {
     scrollIntoView();
   });
 });
+
+// 初始化 jQuery-emoji 插件
+$('.face').on('click',function(){
+  $('#content').emoji({
+    button: '.face',
+    showTab: false,
+    animation: 'slide',
+    position: 'topRight',
+    icons: [
+      {
+        name: 'QQ表情',
+        path: '/lib/jquery-emoji/img/qq/',
+        maxNum: 91,
+        excludeNums: [41, 45, 54],
+        file: '.gif',
+      },
+    ],
+  });
+  
+})
