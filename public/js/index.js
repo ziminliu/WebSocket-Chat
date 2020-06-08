@@ -1,7 +1,7 @@
 /*
  * @Author: 刘子民
  * @Date: 2020-06-07 21:19:05
- * @LastEditTime: 2020-06-08 00:20:14
+ * @LastEditTime: 2020-06-08 08:40:24
  */
 
 /* 
@@ -68,8 +68,8 @@ socket.on('addUser', data => {
     </p>
   </div>
   `);
-  
-  scrollIntoView() 
+
+  scrollIntoView();
 });
 
 // 监听用户列表的消息
@@ -97,8 +97,8 @@ socket.on('delUser', data => {
     </p>
   </div>
   `);
-  
-  scrollIntoView() 
+
+  scrollIntoView();
 });
 
 // 聊天功能
@@ -155,10 +155,73 @@ socket.on('receiveMessage', data => {
     `);
   }
 
-  scrollIntoView() 
+  scrollIntoView();
 });
 
 // 当前元素的底部滚动到可视区
 function scrollIntoView() {
   $('.box-bd').children(':last').get(0).scrollIntoView(false);
 }
+
+// 发送图片
+$('#file').on('change', function () {
+  var file = this.files[0];
+
+  // 把这个文件发送到服务器，借助于H5 新增的fileReader
+  var fr = new FileReader();
+  fr.readAsDataURL(file);
+  fr.onload = function () {
+    // console.log(fr.result)
+    socket.emit('sendImage', {
+      username: username,
+      avatar: avatar,
+      img: fr.result,
+    });
+  };
+});
+
+// 监听图片聊天信息
+// 监听聊天的消息
+socket.on('receiveImage', data => {
+  // 显示接收的消息
+  if (data.username === username) {
+    // console.log('my message');
+    // 自己的消息
+    $('.box-bd').append(`
+    <div class="message-box">
+      <div class="my message">
+        <img class="avatar" src="${data.avatar}" alt="" />
+        <div class="content">
+          <div class="bubble">
+            <div class="bubble_cont">
+              <img src="${data.img}" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    `);
+  } else {
+    // 别人的消息
+    console.log('other message');
+    $('.box-bd').append(`
+    <div class="message-box">
+    <div class="other message">
+      <img class="avatar" src="${data.avatar}" alt="" />
+      <div class="content">
+        <div class="nickname">${data.username}</div>
+        <div class="bubble">
+          <div class="bubble_cont">
+            <img src="${data.img}" />
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+    `);
+  }
+  // 等待图片加载完成
+  $('.box-bd img:last').on('load', function () {
+    scrollIntoView();
+  });
+});

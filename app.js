@@ -1,7 +1,7 @@
 /*
  * @Author: 刘子民
  * @Date: 2020-06-07 21:04:40
- * @LastEditTime: 2020-06-08 00:01:07
+ * @LastEditTime: 2020-06-08 08:19:24
  */
 
 const app = require('express')();
@@ -73,6 +73,11 @@ io.on('connection', socket => {
   socket.on('sendMessage',data=>{
     console.log(data)
     io.emit('receiveMessage',data)
+  })
+
+  // 接收图片信息
+  socket.on('sendImage',data=>{
+    io.emit('receiveImage',data)
   })
 });
 
