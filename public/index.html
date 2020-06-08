@@ -12,6 +12,7 @@
 </head>
 
 <body>
+   
   <div class="login_box" style="display: block;">
     <h3>用户登录</h3>
     <p>用户名</p>
@@ -118,12 +119,25 @@
     </div>
   </div>
   </div>
+  <SCRIPT LANGUAGE="JavaScript">  
+    function hotkey()  
+    {  
+    var a=window.event.keyCode;  
+    if((a===13)&&(event.ctrlKey))  
+    {  
+    alert("你按了ctrl+b键吧");  
+    }  
+    }// end hotkey  
+    document.onkeydown = hotkey; //当onkeydown 事件发生时调用hotkey函数  
+    //-->  
+    </SCRIPT> 
   <!-- 引入socketio -->
   <script src="/socket.io/socket.io.js"></script>
   <script src="js/jquery-1.12.4.js"></script>
   <script src="lib/jquery-mCustomScrollbar/script/jquery.mCustomScrollbar.min.js"></script>
   <script src="lib/jquery-emoji/js/jquery.emoji.min.js"></script>
   <script src="js/index.js"></script>
+  
 </body>
 
 </html>

@@ -1,7 +1,7 @@
 /*
  * @Author: 刘子民
  * @Date: 2020-06-07 21:19:05
- * @LastEditTime: 2020-06-08 09:14:27
+ * @LastEditTime: 2020-06-08 09:33:18
  */
 
 /* 
@@ -227,7 +227,7 @@ socket.on('receiveImage', data => {
 });
 
 // 初始化 jQuery-emoji 插件
-$('.face').on('click',function(){
+$('.face').on('click', function () {
   $('#content').emoji({
     button: '.face',
     showTab: false,
@@ -243,5 +243,15 @@ $('.face').on('click',function(){
       },
     ],
   });
-  
-})
+});
+
+// ctrl + enter 快捷发送
+function hotkey() {
+  var a = window.event.keyCode;
+  if (a === 13 && event.ctrlKey) {
+    // 使用 onclick 不起作用
+    $('#btn-send').click();
+  }
+} // end hotkey
+
+document.onkeydown = hotkey; //当onkeydown 事件发生时调用hotkey函数
